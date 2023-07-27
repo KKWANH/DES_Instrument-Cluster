@@ -1,4 +1,4 @@
-// MACROS FOR EXECUTION
+//  MACROS FOR EXECUTION
 #define BAUD_RATE       9600
 #define SENSOR_PIN      2
 
@@ -11,17 +11,18 @@ void    setup(void)
     delay(1000);
 }
 
-// MACROS FOR CALCULATION
+//  MACROS FOR CALCULATION
 #define PPR             2       // Purses Per Rotation
 #define ZERO_TIMEOUT    100000  // Timeout period(microsecond) for RPM reset
 #define NUM_READINGS    2       // Number of samples for moving average calculation 
 #define PULSE_DISTANCE  6.8e-3  // Distance per pulse in m/s
 
-// NUMBERS FOR CALCULATION
+//  NUMBERS FOR CALCULATION
 volatile unsigned long  prevTimeMeasured;
 volatile unsigned long  purseInterval = ZERO_TIMEOUT + 1000;  // initial value must be bigger than timeout period
 volatile unsigned long  intervalAvg = ZERO_TIMEOUT + 1000;
 unsigned long           intervalSum;
+unsigned int            readingsCnt = 1;
 unsigned int            purseCounter = 1;
 unsigned long           frqRaw;
 unsigned long           RPM;
@@ -79,13 +80,15 @@ void    loop(void)
     //  printing
     Serial.print("Interval: [");
     Serial.print(purseInterval);
-    Serial.print("]\tReadings: [");
-    Serial.print(readingsCnt);
-    Serial.print("]\tSpeed: [");
+    Serial.print(" μs]");
+
+    Serial.print("\tSpeed: [");
     Serial.print(speed);
-    Serial.print("]\tAverage: [");
+    Serial.print(" m/s]");
+
+    Serial.print("\tAverage: [");
     Serial.print(average);
-    Serial.println("]");
+    Serial.println(" m/s]");
 }
 
 //  ISR(Interrupt Service Routine)
@@ -103,7 +106,7 @@ void    purseEvent(void)
         intervalSum   = purseInterval;
 
         int tmpReadCnt= map(purseInterval, 40000, 5000, 1, 10);
-        tmpReadCnt    = constrain(RemapedReadingsCnt, 1, 10);
+        tmpReadCnt    = constrain(tmpReadCnt, 1, 10);
         readingsCnt   = tmpReadCnt;
     } else {
         purseCounter++;
