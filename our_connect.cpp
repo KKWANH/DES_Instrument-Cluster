@@ -35,6 +35,7 @@ unsigned long           readings[NUM_READINGS];
 unsigned long           readIndex;
 unsigned long           total;
 unsigned long           average;
+unsigned long           speed;
 
 void    loop(void)
 {
@@ -56,9 +57,8 @@ void    loop(void)
     
     frqReal = frqRaw / 10000;
 
-    RPM = frqRaw / PPR * 60;
-    RPM = RPM / 10000;
-    speed = PULSE_DISTANCE * RPM * 3.6;  // speed in km/h
+    RPM = (frqRaw / PPR * 60) / 10000;
+    speed = PULSE_DISTANCE * RPM;  // speed in m/s
 
     total = total - readings[readIndex];
     readings[readIndex] = speed;
@@ -81,7 +81,7 @@ void    loop(void)
     Serial.println("]");
 }
 
-void    Pulse_Event(void) {
+void    speedCalculate(void) {
     purseInterval = micros() - prevTimeMeasured;
     prevTimeMeasured = micros();
 
