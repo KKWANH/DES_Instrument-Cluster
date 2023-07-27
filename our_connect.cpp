@@ -7,7 +7,7 @@ void    setup(void)
     Serial.begin(BAUD_RATE);
     pinMode(SENSOR_PIN, INPUT);
 
-    attachInterrupt(digitalPinToInterrupt(SENSOR_PIN), speedCalculate, RISING);
+    attachInterrupt(digitalPinToInterrupt(SENSOR_PIN), purseEvent, RISING);
     delay(1000);
 }
 
@@ -24,7 +24,6 @@ volatile unsigned long  intervalAvg = ZERO_TIMEOUT + 1000;
 unsigned long           intervalSum;
 unsigned int            purseCounter = 1;
 unsigned long           frqRaw;
-unsigned long           frqReal;
 unsigned long           RPM;
 
 unsigned long           prevCycleTime = prevTimeMeasured;
@@ -32,44 +31,52 @@ unsigned long           currMicroSec = micros();
 unsigned int            zeroDebounce;
 unsigned int            amountReadings = 1;
 unsigned long           readings[NUM_READINGS];
-unsigned long           readIndex;
+unsigned long           rIndex;
 unsigned long           total;
 unsigned long           average;
 unsigned long           speed;
 
 void    loop(void)
 {
-    prevCycleTime = prevTimeMeasured;
-    currMicroSec = micros();
+    //  time measure part
+    prevCycleTime   = prevTimeMeasured;
+    currMicroSec    = micros();
 
+    //  time error check (overflow)
     if (currMicroSec < prevCycleTime)
         prevCycleTime = currMicroSec;
 
+    //  pulse frequency calculation
+    //  - 1s * 1000 / average purse interval
+    //  - reason of dividing with 1000 : to reduce errors of calculating float things
     frqRaw = 10000000000 / intervalAvg;
+
+    //  zerodebounce setting to prevent noises
     if ((purseInterval) > (ZERO_TIMEOUT - zeroDebounce) ||
         (currMicroSec - prevCycleTime) > ZERO_TIMEOUT - zeroDebounce)
     {
-        frqRaw = 0; // set frequency as 0
+        frqRaw       = 0; // set frequency as 0
         zeroDebounce = 2000;
     }
     else
         zeroDebounce = 0;
     
-    frqReal = frqRaw / 10000;
+    //  RPM calculating (m/s)
+    RPM              = (frqRaw / 10000) / PPR * 60;
+    speed            = PULSE_DISTANCE * RPM;
 
-    RPM = (frqRaw / PPR * 60) / 10000;
-    speed = PULSE_DISTANCE * RPM;  // speed in m/s
+    //  calculating average speed
+    total            = total - readings[rIndex];
+    readings[rIndex] = speed;
+    total            = total + readings[rIndex];
+    rIndex           = rIndex + 1;
+    average          = total / NUM_READINGS;
 
-    total = total - readings[readIndex];
-    readings[readIndex] = speed;
-    total = total + readings[readIndex];
-    readIndex = readIndex + 1;
+    //  readomg index init
+    if (rIndex >= NUM_READINGS)
+        rIndex = 0;
 
-    if (readIndex >= NUM_READINGS)
-        readIndex = 0;
-
-    average = total / NUM_READINGS;
-
+    //  printing
     Serial.print("Interval: [");
     Serial.print(purseInterval);
     Serial.print("]\tReadings: [");
@@ -81,20 +88,25 @@ void    loop(void)
     Serial.println("]");
 }
 
-void    speedCalculate(void) {
-    purseInterval = micros() - prevTimeMeasured;
-    prevTimeMeasured = micros();
+//  ISR(Interrupt Service Routine)
+//      when purse from the sensor was detected
+void    purseEvent(void)
+{
+    // time setting
+    purseInterval     = micros() - prevTimeMeasured;
+    prevTimeMeasured  = micros();
 
-    if (purseCounter >= readingsCnt) {
-        intervalAvg = intervalSum / readingsCnt;
-        purseCounter = 1;
-        intervalSum = purseInterval;
+    if (purseCounter >= readingsCnt)
+    {
+        intervalAvg   = intervalSum / readingsCnt;
+        purseCounter  = 1;
+        intervalSum   = purseInterval;
 
-        int RemapedReadingsCnt = map(purseInterval, 40000, 5000, 1, 10);
-        RemapedReadingsCnt = constrain(RemapedReadingsCnt, 1, 10);
-        readingsCnt = RemapedReadingsCnt;
+        int tmpReadCnt= map(purseInterval, 40000, 5000, 1, 10);
+        tmpReadCnt    = constrain(RemapedReadingsCnt, 1, 10);
+        readingsCnt   = tmpReadCnt;
     } else {
         purseCounter++;
-        intervalSum = intervalSum + purseInterval;
+        intervalSum   = intervalSum + purseInterval;
     }
 }
