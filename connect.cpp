@@ -1,6 +1,3 @@
-#include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd (0x27, 16, 2);
-
 const byte PulsesPerRevolution = 2;
 const unsigned long ZeroTimeout = 100000;
 const byte numReadings = 2;
@@ -25,11 +22,8 @@ unsigned long average;
 
 void setup() {
   Serial.begin(9600);
-  lcd.init();
-  lcd.backlight();
   attachInterrupt(digitalPinToInterrupt(2), Pulse_Event, RISING);
   delay(1000);
-
 }
 
 void loop() {
@@ -59,8 +53,6 @@ void loop() {
   }
   average = total / numReadings;
 
-
-
   Serial.print("Period: ");
   Serial.print(PeriodBetweenPulses);
   Serial.print("\tReadings: ");
@@ -71,11 +63,6 @@ void loop() {
   Serial.print(RPM);
   Serial.print("\tTachometer: ");
   Serial.println(average);
-  lcd.setCursor(0, 0);
-  lcd.print("RPM : ");
-  lcd.print(RPM);
-  lcd.print("   ");
-
 }
 
 void Pulse_Event() {
