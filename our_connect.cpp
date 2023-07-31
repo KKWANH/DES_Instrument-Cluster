@@ -1,5 +1,5 @@
 //  MACROS FOR EXECUTION
-#define BAUD_RATE       9600
+#define BAUD_RATE       115200
 #define SENSOR_PIN      2
 
 void    setup(void)
@@ -12,7 +12,7 @@ void    setup(void)
 }
 
 //  MACROS FOR CALCULATION
-#define PPR             2       // Purses Per Rotation
+#define PPR             20      // Purses Per Rotation
 #define ZERO_TIMEOUT    100000  // Timeout period(microsecond) for RPM reset
 #define NUM_READINGS    2       // Number of samples for moving average calculation 
 #define PULSE_DISTANCE  6.8e-3  // Distance per pulse in m/s
