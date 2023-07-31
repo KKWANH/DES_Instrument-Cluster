@@ -63,7 +63,8 @@ void    loop(void)
         zeroDebounce = 0;
     
     //  RPM calculating (m/s)
-    RPM              = ((frqRaw / PPR) * 60) / 60000;
+    RPM              = frqRaw / PPR * 60;
+    RPM              = RPM / 10000;
     speed            = PULSE_DISTANCE * RPM;
 
     //  calculating average speed
