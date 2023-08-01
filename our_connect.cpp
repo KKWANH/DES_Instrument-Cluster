@@ -18,7 +18,6 @@ void    setup(void)
 #define PULSE_DISTANCE  3.4e-3  // Distance per pulse in m/s
 #define ROTOR_SIZE      25e-3   // rotor(speedometer) size (mm)
 #define WHEEL_SIZE      65e-3   // wheel size (mm)
-#define PI              3.1415  // PI
 
 //  NUMBERS FOR CALCULATION
 volatile unsigned long  prevTimeMeasured;
@@ -34,9 +33,8 @@ unsigned long           RPM_WHEEL;
 unsigned long           prevCycleTime = prevTimeMeasured;
 unsigned long           currMicroSec = micros();
 unsigned int            zeroDebounce;
-unsigned int            amountReadings = 1;
 // unsigned long           readings[NUM_READINGS];
-unsigned long           rIndex;
+// unsigned long           rIndex;
 // unsigned long           total;
 // unsigned long           average;
 unsigned long           speed;
@@ -73,6 +71,8 @@ void    loop(void)
     RPM_ROTOR        = RPM_ROTOR / 10;
     RPM_WHEEL        = RPM_ROTOR * (ROTOR_SIZE / WHEEL_SIZE);
     speed            = RPM_WHEEL / 60.0 * 2.0 * PI * WHEEL_SIZE;
+    RPM_ROTOR       /= 100;
+    RPM_WHEEL       /= 100;
 
     // //  calculating average speed
     // total            = total - readings[rIndex];
@@ -82,8 +82,8 @@ void    loop(void)
     // average          = total / NUM_READINGS;
 
     //  readomg index init
-    if (rIndex >= NUM_READINGS)
-        rIndex = 0;
+    // if (rIndex >= NUM_READINGS)
+    //     rIndex = 0;
 
     //  printing
     Serial.print("Interval: [");
