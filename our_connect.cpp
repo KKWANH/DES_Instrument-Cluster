@@ -70,7 +70,7 @@ void    loop(void)
     // RPM              = frqRaw / PPR * 60;
     // RPM              = RPM / 10000;
     RPM_ROTOR        = (frqRaw * 60) / PPR;
-    RPM_ROTOR        = RPM_ROTOR / 1000;
+    RPM_ROTOR        = RPM_ROTOR / 10;
     RPM_WHEEL        = RPM_ROTOR * (ROTOR_SIZE / WHEEL_SIZE);
     speed            = RPM_WHEEL / 60.0 * 2.0 * PI * WHEEL_SIZE;
 
@@ -98,7 +98,7 @@ void    loop(void)
 
     Serial.print("\tSpeed: [");
     Serial.print(speed);
-    Serial.println(" m/s]");
+    Serial.println(" cm/s]");
 
     // Serial.print("\tAverage: [");
     // Serial.print(average);
