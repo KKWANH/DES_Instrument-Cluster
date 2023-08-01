@@ -15,7 +15,7 @@ void    setup(void)
 #define PPR             20      // Purses Per Rotation
 #define ZERO_TIMEOUT    100000  // Timeout period(microsecond) for RPM reset
 #define NUM_READINGS    2       // Number of samples for moving average calculation 
-#define PULSE_DISTANCE  6.8e-3  // Distance per pulse in m/s
+#define PULSE_DISTANCE  3.4e-3  // Distance per pulse in m/s
 
 //  NUMBERS FOR CALCULATION
 volatile unsigned long  prevTimeMeasured;
