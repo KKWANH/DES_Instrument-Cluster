@@ -5,3 +5,4 @@ adafruit-circuitpython-ina219
 adafruit-circuitpython-ssd1306
 opencv-python
 pygame
+can
