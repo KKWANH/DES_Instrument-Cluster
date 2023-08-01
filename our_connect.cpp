@@ -16,6 +16,9 @@ void    setup(void)
 #define ZERO_TIMEOUT    100000  // Timeout period(microsecond) for RPM reset
 #define NUM_READINGS    2       // Number of samples for moving average calculation 
 #define PULSE_DISTANCE  3.4e-3  // Distance per pulse in m/s
+#define ROTOR_SIZE      25e-3   // rotor(speedometer) size (mm)
+#define WHEEL_SIZE      65e-3   // wheel size (mm)
+#define PI              3.1415  // PI
 
 //  NUMBERS FOR CALCULATION
 volatile unsigned long  prevTimeMeasured;
@@ -25,7 +28,8 @@ unsigned long           intervalSum;
 unsigned int            readingsCnt = 1;
 unsigned int            purseCounter = 1;
 unsigned long           frqRaw;
-unsigned long           RPM;
+unsigned long           RPM_ROTOR;
+unsigned long           RPM_WHEEL;
 
 unsigned long           prevCycleTime = prevTimeMeasured;
 unsigned long           currMicroSec = micros();
@@ -50,7 +54,7 @@ void    loop(void)
     //  pulse frequency calculation
     //  - 1s * 1000 / average purse interval
     //  - reason of dividing with 1000 : to reduce errors of calculating float things
-    frqRaw = 10000000000 / intervalAvg;
+    frqRaw = 1000000 / intervalAvg;
 
     //  zerodebounce setting to prevent noises
     if ((purseInterval) > (ZERO_TIMEOUT - zeroDebounce) ||
@@ -63,9 +67,11 @@ void    loop(void)
         zeroDebounce = 0;
     
     //  RPM calculating (m/s)
-    RPM              = frqRaw / PPR * 60;
-    RPM              = RPM / 10000;
-    speed            = PULSE_DISTANCE * RPM;
+    // RPM              = frqRaw / PPR * 60;
+    // RPM              = RPM / 10000;
+    RPM_ROTOR        = (frqRaw * 60) / PPR;
+    RPM_WHEEL        = RPM_ROTOR * (ROTOR_SIZE / WHEEL_SIZE);
+    speed            = RPM_WHEEL / 60.0 * 2.0 * PI * WHEEL_SIZE;
 
     // //  calculating average speed
     // total            = total - readings[rIndex];
