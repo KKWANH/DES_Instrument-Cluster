@@ -1,5 +1,5 @@
 //  MACROS FOR EXECUTION
-#define BAUD_RATE       115200
+#define BAUD_RATE       9600
 #define SENSOR_PIN      2
 
 void    setup(void)
@@ -36,10 +36,10 @@ unsigned long           currMicroSec = micros();
 unsigned int            zeroDebounce;
 unsigned int            amountReadings = 1;
 // unsigned long           readings[NUM_READINGS];
-// unsigned long           rIndex;
+unsigned long           rIndex;
 // unsigned long           total;
 // unsigned long           average;
-// unsigned long           speed;
+unsigned long           speed;
 
 void    loop(void)
 {
@@ -54,7 +54,7 @@ void    loop(void)
     //  pulse frequency calculation
     //  - 1s * 1000 / average purse interval
     //  - reason of dividing with 1000 : to reduce errors of calculating float things
-    frqRaw = 1000000 / intervalAvg;
+    frqRaw = 10000000000 / intervalAvg;
 
     //  zerodebounce setting to prevent noises
     if ((purseInterval) > (ZERO_TIMEOUT - zeroDebounce) ||
@@ -70,6 +70,7 @@ void    loop(void)
     // RPM              = frqRaw / PPR * 60;
     // RPM              = RPM / 10000;
     RPM_ROTOR        = (frqRaw * 60) / PPR;
+    RPM_ROTOR        = RPM_ROTOR / 1000;
     RPM_WHEEL        = RPM_ROTOR * (ROTOR_SIZE / WHEEL_SIZE);
     speed            = RPM_WHEEL / 60.0 * 2.0 * PI * WHEEL_SIZE;
 
@@ -90,7 +91,9 @@ void    loop(void)
     Serial.print(" μs]");
 
     Serial.print("RPM: [");
-    Serial.print(RPM);
+    Serial.print(RPM_ROTOR);
+    Serial.print(", ");
+    Serial.print(RPM_WHEEL);
     Serial.print("]");
 
     Serial.print("\tSpeed: [");
