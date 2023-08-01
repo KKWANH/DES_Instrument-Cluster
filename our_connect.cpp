@@ -31,11 +31,11 @@ unsigned long           prevCycleTime = prevTimeMeasured;
 unsigned long           currMicroSec = micros();
 unsigned int            zeroDebounce;
 unsigned int            amountReadings = 1;
-unsigned long           readings[NUM_READINGS];
-unsigned long           rIndex;
-unsigned long           total;
-unsigned long           average;
-unsigned long           speed;
+// unsigned long           readings[NUM_READINGS];
+// unsigned long           rIndex;
+// unsigned long           total;
+// unsigned long           average;
+// unsigned long           speed;
 
 void    loop(void)
 {
@@ -67,12 +67,12 @@ void    loop(void)
     RPM              = RPM / 10000;
     speed            = PULSE_DISTANCE * RPM;
 
-    //  calculating average speed
-    total            = total - readings[rIndex];
-    readings[rIndex] = speed;
-    total            = total + readings[rIndex];
-    rIndex           = rIndex + 1;
-    average          = total / NUM_READINGS;
+    // //  calculating average speed
+    // total            = total - readings[rIndex];
+    // readings[rIndex] = speed;
+    // total            = total + readings[rIndex];
+    // rIndex           = rIndex + 1;
+    // average          = total / NUM_READINGS;
 
     //  readomg index init
     if (rIndex >= NUM_READINGS)
@@ -83,13 +83,17 @@ void    loop(void)
     Serial.print(purseInterval);
     Serial.print(" μs]");
 
+    Serial.print("RPM: [");
+    Serial.print(RPM);
+    Serial.print("]");
+
     Serial.print("\tSpeed: [");
     Serial.print(speed);
-    Serial.print(" m/s]");
-
-    Serial.print("\tAverage: [");
-    Serial.print(average);
     Serial.println(" m/s]");
+
+    // Serial.print("\tAverage: [");
+    // Serial.print(average);
+    // Serial.print(" m/s]");
 }
 
 //  ISR(Interrupt Service Routine)
