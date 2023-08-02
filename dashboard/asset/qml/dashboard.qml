@@ -29,14 +29,14 @@ Window {
           spacing:          (container.width * 0.02)
           anchors.centerIn: (parent)
 
-          TurnIndicator {
-              id:                     leftIndicator
-              anchors.verticalCenter: (parent.verticalCenter)
-              width:                  (height)
-              height:                 (container.height * 0.1) - (gaugeRow.spacing)
-              direction:              (Qt.LeftArrow)
-              on:                     (valueSource.turnSignal == Qt.LeftArrow)
-          }
+//          TurnIndicator {
+//              id:                     leftIndicator
+//              anchors.verticalCenter: (parent.verticalCenter)
+//              width:                  (height)
+//              height:                 (container.height * 0.1) - (gaugeRow.spacing)
+//              direction:              (Qt.LeftArrow)
+//              on:                     (valueSource.turnSignal == Qt.LeftArrow)
+//          }
 
           Item {
               width:                  height
@@ -117,7 +117,7 @@ Window {
               anchors.verticalCenter: (parent.verticalCenter)
 
               value:                  valueSource.kph
-              maximumValue:           (280)
+              maximumValue:           (400)
 
               style: DashboardGaugeStyle {
               }
@@ -136,15 +136,15 @@ Window {
               }
           }
 
-          TurnIndicator {
-              id:                     rightIndicator
-              width:                  (height)
-              height:                 (container.height * 0.1) - (gaugeRow.spacing)
-              anchors.verticalCenter: (parent.verticalCenter)
+//          TurnIndicator {
+//              id:                     rightIndicator
+//              width:                  (height)
+//              height:                 (container.height * 0.1) - (gaugeRow.spacing)
+//              anchors.verticalCenter: (parent.verticalCenter)
 
-              direction:              (Qt.RightArrow)
-              on:                     (valueSource.turnSignal == Qt.RightArrow)
-          }
+//              direction:              (Qt.RightArrow)
+//              on:                     (valueSource.turnSignal == Qt.RightArrow)
+//          }
 
       }
   }

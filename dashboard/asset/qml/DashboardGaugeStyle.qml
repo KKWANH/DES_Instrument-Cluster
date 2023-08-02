@@ -4,7 +4,7 @@ import  QtQuick.Controls.Styles 1.4
 CircularGaugeStyle {
     tickmarkInset:      (toPixels(0.04))
     minorTickmarkInset: (tickmarkInset)
-    labelStepSize:      (20)
+    labelStepSize:      (40)
     labelInset:         (toPixels(0.23))
 
     property real xCenter:          (outerRadius)
@@ -107,7 +107,7 @@ CircularGaugeStyle {
             readonly property int kphInt: control.value
         }
         Text {
-            text:                       "km/h"
+            text:                       "cm/s"
             color:                      "white"
             font.pixelSize:             toPixels(0.09)
             anchors.top:                speedText.bottom

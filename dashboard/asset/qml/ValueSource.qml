@@ -5,7 +5,7 @@ Item {
     id:             valueSource
     property real   kph:    (0)
     property real   rpm:    (1)
-    property real   fuel:   (0.85)
+    property real   fuel:   (1)
     property string gear: {
         if (kph == 0)
             return "P";
@@ -20,14 +20,14 @@ Item {
         if (kph < 160)
             return "5";
     }
-    property int    turnSignal:     (gear == "P") && ((!start) ? (randomDirection()) : (-1))
-    property real   temperature:    (0.6)
+//    property int    turnSignal:     (gear == "P") && ((!start) ? (randomDirection()) : (-1))
+    property real   temperature:    (0.5)
     property bool   start:          (true)
 //! [0]
 
-    function randomDirection() {
-        return  ((Math.random() > 0.5) ? Qt.LeftArrow : Qt.RightArrow);
-    }
+//    function randomDirection() {
+//        return  ((Math.random() > 0.5) ? Qt.LeftArrow : Qt.RightArrow);
+//    }
 
     SequentialAnimation {
         running:    (true)
