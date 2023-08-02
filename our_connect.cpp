@@ -4,9 +4,11 @@
 
 void    setup(void)
 {
+    //  Pin Setup
     Serial.begin(BAUD_RATE);
     pinMode(SENSOR_PIN, INPUT);
 
+    //  interrupt occur
     attachInterrupt(digitalPinToInterrupt(SENSOR_PIN), purseEvent, RISING);
     delay(1000);
 }
