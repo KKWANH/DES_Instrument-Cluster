@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
 
     QObject::connect(&timer, &QTimer::timeout, [&]()
     {
+        //LAMBDA
 
         if(abs(volt-val) <=10)
             val = volt;
